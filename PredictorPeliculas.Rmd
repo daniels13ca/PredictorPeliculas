@@ -78,29 +78,6 @@ Column {.tabset data-width=400}
 data("Groceries", package = "arules")
 dfitems <- tbl_df(Groceries@itemInfo)
 
-set.seed(10)
-
-dfitemsg <- dfitems %>%
-  mutate(category = gsub(" ", "-", level1),
-         subcategory = gsub(" ", "-", level2)) %>%
-  group_by(category, subcategory) %>% 
-  summarise(sales = n() ^ 3 ) %>% 
-  ungroup() %>% 
-  sample_n(31)
-
-tm <- treemap(dfitemsg, index = c("category", "subcategory"),
-              vSize = "sales", vColor = "sales",
-              type = "value", palette = rev(viridis(6)))
-
-highchart() %>% 
-  hc_add_series_treemap(tm, allowDrillToNode = TRUE,
-                        layoutAlgorithm = "squarified") %>% 
-  hc_add_theme(thm)
-```
-
-### Best Sellers
-
-```{r}
 set.seed(2)
 
 nprods <- 10
@@ -113,5 +90,5 @@ dfitems %>%
   hchart(showInLegend = FALSE, name = "Sales", pointWidth = 10) %>% 
   hc_add_theme(thm) %>% 
   hc_chart(type = "bar")
-
+  
 ```
