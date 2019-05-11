@@ -113,5 +113,5 @@ dfitems %>%
   hchart(showInLegend = FALSE, name = "Sales", pointWidth = 10) %>% 
   hc_add_theme(thm) %>% 
   hc_chart(type = "bar")
-  
+
 ```
