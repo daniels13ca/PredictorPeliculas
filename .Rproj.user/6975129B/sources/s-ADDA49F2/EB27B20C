@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557515406915.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "EB27B20C",
+    "lastKnownWriteTime" : 1557519751,
+    "last_content_update" : 1557519751606,
+    "path" : "D:/Daniel/Repositorios/PredictorPeliculas/PredictorPeliculas.Rmd",
+    "project_path" : "PredictorPeliculas.Rmd",
+    "properties" : {
+        "cursorPosition" : "114,22",
+        "scrollLine" : "90",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
