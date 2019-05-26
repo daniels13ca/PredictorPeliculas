@@ -12,3 +12,4 @@ mean_by_genre <- aggregate(data[,8], list(data$Genero), mean)
 mean_by_genre
 
 #histograma de calificaciones
+hist(data$Calificación)
