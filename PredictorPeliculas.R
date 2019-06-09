@@ -13,3 +13,6 @@ mean_by_genre
 
 #histograma de calificaciones
 hist(data$Calificación)
+
+top_movies <- data[order(-data$Calificación),]
+top_movies <- top_movies[, c(2, 7, 8)]
