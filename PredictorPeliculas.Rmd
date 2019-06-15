@@ -43,24 +43,29 @@ Column {.tabset .tabset-fade}
 top_movies <- data[order(-data$Calificación),]
 top_movies <- top_movies[, c(2, 3, 7, 8)]
 
-lista <- data.frame(genres)
-
-aparece <- data.frame(Aparece = integer())
-
-for (observacion in top_movies$Genero){
-  incluye = 0  
-  for (resultado in lista$genres){
-    if (observacion == resultado){
-      incluye = 1
-    }  
-  }
-  aparece[nrow(aparece) + 1,] = list(incluye)
-}
-
-top_movies <- cbind(top_movies, aparece)
-
 DT::renderDataTable({
   top_movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
   DT::datatable(top_movies, rownames = FALSE)
+})
+```
+Calificaciones medias 
+=====================================
+
+### Calificaciones
+
+```{r}
+library(plotly)
+
+#Calificación media
+#Desviación
+#Recuento
+
+x <- list(title = "Calificación")
+y <- list(title = "Recuento")
+
+renderPlotly({
+  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  g <- plot_ly(x = movies$Calificación, type = "histogram") %>% layout(xaxis = x, yaxis = y)
+  ggplotly(g)
 })
 ```
