@@ -1,5 +1,5 @@
 ---
-title: "Calificación de películas según gustos personales"
+title: "Calificación colaborativa de películas"
 author: "Daniel Silva Barrera"
 runtime: shiny
 output: 
@@ -21,7 +21,7 @@ data <- read.xlsx("Formulario de calificación de películas - Depurado.xlsx", s
 genres <- unique(data$Genero)
 ```
 
-Selections {.sidebar}
+Selecciones {.sidebar}
 ===============================
 
 Seleccione los géneros a filtrar
@@ -30,13 +30,79 @@ Seleccione los géneros a filtrar
 checkboxGroupInput("movie_type", label = "Géneros", genres, selected = genres)
 ```
 
+Calificaciones 
+=====================================
+
+Columna 1 {data-width=200}
+------------------------------------
+### Histograma
+
+```{r}
+library(plotly)
+
+x <- list(title = "Calificación")
+y <- list(title = "Recuento")
+
+renderPlotly({
+  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  g <- plot_ly(x = movies$Calificación, type = "histogram") %>% layout(xaxis = x, yaxis = y)
+  ggplotly(g)
+})
+```
+
+Columna 2 {data-width=300}
+-------------------------------------
+
+### Calificaciones medias
+
+```{r}
+library(plotly)
+
+renderValueBox({
+  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  valueBox(round(mean(movies$Calificación), 2), icon = "ion-videocamera", 
+           caption="Calificación media", color="blue")
+})
+
+```
+
+### Películas calificadas
+
+```{r}
+library(plotly)
+
+renderValueBox({
+  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  valueBox(nrow(movies), icon = "ion-videocamera", 
+           caption="Películas calificadas", color="blue")
+})
+
+```
+
+### Desviación estandar
+
+```{r}
+library(plotly)
+
+renderValueBox({
+  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  valueBox(round(sd(movies$Calificación), 2), icon = "ion-videocamera", 
+           caption="Desviación estándar", color="blue")
+})
+
+```
+
+### Ratings por años
+
+Esta gráfica muestra las calificaciones por años
+
 Películas
 ===================================== 
 
-Column {.tabset .tabset-fade}
+Columna {.tabset .tabset-fade}
 -------------------------------------
 
-### Top películas
+### Películas
 
 ```{r}
 
@@ -48,24 +114,10 @@ DT::renderDataTable({
   DT::datatable(top_movies, rownames = FALSE)
 })
 ```
-Calificaciones medias 
-=====================================
 
-### Calificaciones
+Acerca de
+===================================== 
 
-```{r}
-library(plotly)
+### ¿Cómo funciona?
 
-#Calificación media
-#Desviación
-#Recuento
-
-x <- list(title = "Calificación")
-y <- list(title = "Recuento")
-
-renderPlotly({
-  movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
-  g <- plot_ly(x = movies$Calificación, type = "histogram") %>% layout(xaxis = x, yaxis = y)
-  ggplotly(g)
-})
-```
+Descontento por.....
