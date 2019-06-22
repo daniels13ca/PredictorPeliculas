@@ -92,9 +92,25 @@ renderValueBox({
 
 ```
 
-### Ratings por años
+### Tendencia histórica de calificaciones
 
-Esta gráfica muestra las calificaciones por años
+```{r}
+library(dygraphs)
+renderDygraph({
+  years <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
+  mean_by_year = tapply(years$Calificación, years$Año, mean)
+  ## Create ts object
+  x = ts(as.vector(mean_by_year), start=1920, end=2020)
+  y = cbind(Rating=x)
+  
+  ## Plot code
+  dygraph(y, main = "Tendencia de la calificación media", 
+          ylab = "Calificación",group="Ratings") %>% 
+    dyRangeSelector() %>%
+    dyOptions(stepPlot = TRUE) %>%
+    dySeries("V1", label = "Calificación")
+})
+```
 
 Películas
 ===================================== 
