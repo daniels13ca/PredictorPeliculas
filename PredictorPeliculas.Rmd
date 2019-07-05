@@ -8,6 +8,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+
+list.of.packages <- c("shiny", "flexdashboard", "ggplot2", "xlsx", "plotly", "dygraphs")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+
 library("shiny")
 library("flexdashboard")
 ```
@@ -16,7 +22,7 @@ library("flexdashboard")
 library("ggplot2")
 library("xlsx")
 
-data <- read.xlsx("Formulario de calificación de películas - Depurado.xlsx", sheetIndex = 1, encoding="UTF-8")
+data <- read.xlsx("Formulario de calificacion de peliculas - Depurado.xlsx", sheetIndex = 1, encoding="UTF-8")
 
 genres <- unique(data$Genero)
 ```
@@ -27,7 +33,7 @@ Selecciones {.sidebar}
 Seleccione los géneros a filtrar
 
 ```{r}
-checkboxGroupInput("movie_type", label = "Géneros", genres, selected = genres)
+checkboxGroupInput("movie_type", label = "Generos", genres, selected = genres)
 ```
 
 Calificaciones 
@@ -40,12 +46,12 @@ Columna 1 {data-width=200}
 ```{r}
 library(plotly)
 
-x <- list(title = "Calificación")
+x <- list(title = "Calificacion")
 y <- list(title = "Recuento")
 
 renderPlotly({
   movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
-  g <- plot_ly(x = movies$Calificación, type = "histogram") %>% layout(xaxis = x, yaxis = y)
+  g <- plot_ly(x = movies$Calificacion, type = "histogram") %>% layout(xaxis = x, yaxis = y)
   ggplotly(g)
 })
 ```
@@ -60,7 +66,7 @@ library(plotly)
 
 renderValueBox({
   movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
-  valueBox(round(mean(movies$Calificación), 2), icon = "ion-videocamera", 
+  valueBox(round(mean(movies$Calificacion), 2), icon = "ion-videocamera", 
            caption="Calificación media", color="blue")
 })
 
@@ -86,7 +92,7 @@ library(plotly)
 
 renderValueBox({
   movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
-  valueBox(round(sd(movies$Calificación), 2), icon = "ion-videocamera", 
+  valueBox(round(sd(movies$Calificacion), 2), icon = "ion-videocamera", 
            caption="Desviación estándar", color="blue")
 })
 
@@ -98,7 +104,7 @@ renderValueBox({
 library(dygraphs)
 renderDygraph({
   years <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
-  mean_by_year = tapply(years$Calificación, years$Año, mean)
+  mean_by_year = tapply(years$Calificacion, years$Ano, mean)
   ## Create ts object
   x = ts(as.vector(mean_by_year), start=1920, end=2020)
   y = cbind(Rating=x)
@@ -122,7 +128,7 @@ Columna {.tabset .tabset-fade}
 
 ```{r}
 
-top_movies <- data[order(-data$Calificación),]
+top_movies <- data[order(-data$Calificacion),]
 top_movies <- top_movies[, c(2, 3, 7, 8)]
 
 DT::renderDataTable({
