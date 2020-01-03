@@ -5,8 +5,8 @@ account: daniels13ca
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 994194
-bundleId: 2516910
+bundleId: 2705085
 url: https://daniels13ca.shinyapps.io/Ratingpelis/
-when: 1571572063.51307
+when: 1578079864.79347
 asMultiple: FALSE
 asStatic: FALSE

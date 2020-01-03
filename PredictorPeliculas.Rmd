@@ -118,7 +118,7 @@ renderDygraph({
 })
 ```
 
-Películas
+Peliculas
 ===================================== 
 
 Columna {.tabset .tabset-fade}
