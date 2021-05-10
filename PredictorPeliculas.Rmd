@@ -1,5 +1,5 @@
 ---
-title: "Ratingpelis 0.1"
+title: "Ratingpelis 0.2"
 author: "Daniel Silva Barrera"
 runtime: shiny
 output: 
@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 
-list.of.packages <- c("shiny", "flexdashboard", "ggplot2", "xlsx", "plotly", "dygraphs")
+list.of.packages <- c("shiny", "flexdashboard", "ggplot2", "plotly", "dygraphs", "stringr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -20,9 +20,41 @@ library("flexdashboard")
 
 ```{r}
 library("ggplot2")
-library("xlsx")
+library("stringr")
 
-data <- read.xlsx("Formulario de calificacion de peliculas - Depurado.xlsx", sheetIndex = 1, encoding="UTF-8")
+data <- read.csv2(file="Formulario de calificación de películas (respuestas).csv", sep = ";", header = TRUE, 
+        encoding="UTF-8")
+
+col_names <- c("Fecha", "Titulo", "Resumen", "Link en The Movie DB", "Sexo", "Edad al momento de ver la pelicula", "Calificacion", "Genero")
+
+names(data) <- col_names
+data$Index <- seq.int(nrow(data))
+
+list_genre <- str_split_fixed(data$Genero, ",", n=Inf)
+
+col_number <- ncol(list_genre)
+row_number <- nrow(list_genre)
+
+genres_view <- data.frame(Index=integer(),
+                          Genero=character())
+
+for ( i in 1:row_number){
+  for ( j in 1:col_number ){
+    index_t <- i
+    genre_t <- list_genre[i, j]
+    
+    if(genre_t != ""){
+      genres_view[nrow(genres_view) + 1,] = c(index_t,genre_t)
+    }
+  }
+}
+
+data$Genero <- NULL
+
+data <- merge(x = data, y = genres_view, by = "Index", all.y = TRUE)
+
+data$Ano <-str_sub(data$Titulo,-5,-2)
+data$Titulo = substr(data$Titulo,1,nchar(data$Titulo)-7)
 
 genres <- unique(data$Genero)
 ```
@@ -129,7 +161,7 @@ Columna {.tabset .tabset-fade}
 ```{r}
 
 top_movies <- data[order(-data$Calificacion),]
-top_movies <- top_movies[, c(2, 3, 7, 8)]
+top_movies <- top_movies[, c(3, 10, 9, 8)]
 
 DT::renderDataTable({
   top_movies <- unique(top_movies[top_movies$Genero %in% input$movie_type, c(1, 2, 4)])
