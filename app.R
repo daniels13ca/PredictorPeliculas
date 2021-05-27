@@ -1,7 +1,10 @@
+library(shinydashboard)
 library(stringr)
 
+#Preprocesamiento de datos
+
 data <- read.csv2(file="Formulario de calificación de películas (respuestas).csv", sep = ";", header = TRUE, 
-        encoding="UTF-8")
+                  encoding="UTF-8")
 
 col_names <- c("Fecha", "Titulo", "Resumen", "Link en The Movie DB", "Sexo", "Edad al momento de ver la pelicula", "Calificacion", "Genero")
 
@@ -33,7 +36,37 @@ genres_view$Genero <- trimws(genres_view$Genero, which = c("both"))
 data <- merge(x = data, y = genres_view, by = "Index", all.y = TRUE)
 
 data$Ano <-str_sub(data$Titulo,-5,-2)
-data$Titulo = substr(data$Titulo,1,nchar(data$Titulo)-7)
+data$Titulo <- substr(data$Titulo,1,nchar(data$Titulo)-7)
 
-head(data)
+listado_generos <- unique(data$Genero)
 
+####################################################################
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Ratingpelis 0.2"),
+  dashboardSidebar(
+    sidebarMenu(
+      checkboxGroupInput("movie_type", label = NULL, listado_generos, selected = listado_generos)
+    )
+  ),
+  dashboardBody(
+    tabItems(
+
+      # Second tab content
+      tabItem(tabName = "widgets",
+              h2("Widgets tab content")
+      )
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  #output$Genero <- preprocesamiento()
+
+
+}
+
+
+
+shinyApp(ui, server)
