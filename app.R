@@ -2,13 +2,14 @@ library(shinydashboard)
 library(stringr)
 library(ggplot2)
 library(plotly)
+library(dygraphs)
 
 #Preprocesamiento de datos
 source("data_preparation.R", encoding = "UTF-8")
 listado_generos <- unique(data$Genero)
 generos_seleccionados <- listado_generos
 
-top_movies <- data[order(-data$Calificacion), ]
+top_movies <- data[order(-data$Calificacion),]
 top_movies <- top_movies[, c(3, 10, 9, 8)]
 
 
@@ -25,18 +26,13 @@ ui <- dashboardPage(
     )
   )),
   
-  dashboardBody(fluidRow(box(
-    plotOutput("plot1", height = 450)
-  ),
-  box(
-    valueBoxOutput("box1")
-  ),
-  box(
-    valueBoxOutput("box2")
-  ),
-  box(
-    valueBoxOutput("box3")
-  )))
+  dashboardBody(fluidRow(
+    box(plotOutput("plot1", height = 450)),
+    box(valueBoxOutput("box1")),
+    box(valueBoxOutput("box2")),
+    box(valueBoxOutput("box3")),
+    box(dygraphOutput("trend"))
+  ))
 )
 
 
@@ -60,33 +56,48 @@ server <- function(input, output) {
     movies <-
       unique(data[data$Genero %in% input$movie_type, c("Titulo", "Calificacion")])
     
-    valueBox(
-      round(mean(movies$Calificacion), 2),
-      "Calificación media",
-      color = "blue"
-    )
+    valueBox(round(mean(movies$Calificacion), 2),
+             "Calificación media",
+             color = "blue")
   })
   
   output$box2 <- renderValueBox({
     movies <-
       unique(data[data$Genero %in% input$movie_type, c("Titulo", "Calificacion")])
     
-    valueBox(
-      nrow(movies),
-      "Películas calificadas",
-      color = "blue"
-    )
+    valueBox(nrow(movies),
+             "Películas calificadas",
+             color = "blue")
   })
   
   output$box3 <- renderValueBox({
     movies <-
       unique(data[data$Genero %in% input$movie_type, c("Titulo", "Calificacion")])
     
-    valueBox(
-      round(sd(movies$Calificacion), 2),
-      "Desviación estándar",
-      color = "blue"
-    )
+    valueBox(round(sd(movies$Calificacion), 2),
+             "Desviación estándar",
+             color = "blue")
+  })
+  
+  output$trend <- renderDygraph({
+    years <-
+      unique(data[data$Genero %in% input$movie_type, c("Ano", "Calificacion")])
+    mean_by_year = tapply(years$Calificacion, years$Ano, mean)
+    ## Create ts object
+    x = ts(as.vector(mean_by_year),
+           start = 1920,
+           end = 2020)
+    y = cbind(Rating = x)
+    
+    ## Plot code
+    dygraph(y,
+            main = "Tendencia de la calificación media por año",
+            ylab = "Calificación",
+            group = "Ratings") %>%
+      dyRangeSelector() %>%
+      dyOptions(stepPlot = TRUE) %>%
+      dySeries("V1", label = "Calificación")
+    
   })
   
 }
