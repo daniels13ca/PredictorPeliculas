@@ -1,8 +1,10 @@
+library(shiny)
 library(shinydashboard)
 library(stringr)
 library(ggplot2)
 library(plotly)
 library(dygraphs)
+library(DT)
 
 #Preprocesamiento de datos
 source("data_preparation.R", encoding = "UTF-8")
@@ -26,13 +28,42 @@ ui <- dashboardPage(
     )
   )),
   
-  dashboardBody(fluidRow(
-    box(plotOutput("plot1", height = 450)),
-    box(valueBoxOutput("box1")),
-    box(valueBoxOutput("box2")),
-    box(valueBoxOutput("box3")),
-    box(dygraphOutput("trend"))
-  ))
+  dashboardBody(
+    tabBox(
+      title = "Información de las películas", width = 100, id = "tabset1",
+      box(plotOutput("plot1"),
+          valueBoxOutput("box1"),
+          valueBoxOutput("box2"),
+          valueBoxOutput("box3")),
+      dygraphOutput("trend")
+    ),
+    tabBox(
+      title = "Películas calificadas", width = 100, id = "tabset2",
+      box(dataTableOutput("table"))
+    ),
+    tabBox(
+      title = "¿Comó funciona?", width = 100, id = "tabset3",
+      p("A raíz de lo poco acertadas que resultaban ser las calificaciones que
+         los sitios de ratings más populares le daban a las películas
+         frente a mi opinión personal, lo cual me llevaba a ver películas que
+         no satisfacían mis expectativas, decidí crear mi propio sistema de
+         calificación y a la vez un predictor de la posible calificación que yo
+         le otorgaría a la película. Para esto me base en él o en los géneros de 
+         las películas según", a("The Movie DB", href= "https://www.themoviedb.org")), 
+      p("En una segunda fase esta contemplado pronosticar la calificación de películas 
+        similares, incluyendo predictores tales como:"),
+      p("- Año de lanzamiento"),
+      p("- Edad del observador"),
+      p("- Sexo del observador"),
+      p("- Palabras claves del resumen"),
+      p("Si desean contribuir a enriquecer la base de datos lo pueden hacer diligenciando el 
+        siguiente formulario" , a("aquí", href= "https://forms.gle/y6bMuf16cKmyD6549")),
+      p("Contacto: ",a("silvdaniel@gmail.com", href= "silvdaniel@gmail.com"))
+    )
+
+  )
+  
+  
 )
 
 
@@ -97,6 +128,12 @@ server <- function(input, output) {
       dyRangeSelector() %>%
       dyOptions(stepPlot = TRUE) %>%
       dySeries("V1", label = "Calificación")
+    
+  })
+  
+  output$table <- renderDataTable({
+    movies <- unique(data[data$Genero %in% input$movie_type, c("Titulo", "Calificacion")])
+    datatable(movies, rownames = FALSE)
     
   })
   
