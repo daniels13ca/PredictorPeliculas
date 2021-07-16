@@ -17,6 +17,7 @@ top_movies <- top_movies[, c(3, 10, 9, 8)]
 
 #Cliente
 ui <- dashboardPage(
+  
   dashboardHeader(title = "Ratingpelis 0.2"),
   
   dashboardSidebar(sidebarMenu(
@@ -29,6 +30,12 @@ ui <- dashboardPage(
   )),
   
   dashboardBody(
+    
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "movies_style.css")
+    ),
+    
+    
     tabBox(
       title = "Información de las películas", width = 100, id = "tabset1",
       box(plotOutput("plot1"),
