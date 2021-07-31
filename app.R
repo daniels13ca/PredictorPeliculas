@@ -18,6 +18,8 @@ top_movies <- top_movies[, c(3, 10, 9, 8)]
 #Cliente
 ui <- dashboardPage(
   
+  skin = "black",
+  
   dashboardHeader(title = "Ratingpelis 0.2"),
   
   dashboardSidebar(sidebarMenu(
