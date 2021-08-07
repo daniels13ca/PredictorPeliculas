@@ -11,10 +11,6 @@ h2 {
   font-family: 'Yusei Magic', sans-serif;
 }
 
-#box3 {
-  color: white;
-}
-
 p {
   font-family: 'Yusei Magic', sans-serif;
   color: #242c34; /* text color */
@@ -24,6 +20,7 @@ p {
 .shiny-input-container {
   color: #242c34;
   background-color: white;
+  font-size: 16px;
 }
 
 .shiny-bound-input {
@@ -53,3 +50,11 @@ p {
   color: white;
 }
 
+.small-box>.inner {
+  background-color: #E2E4F0;
+  color: black;
+}
+
+.div>.dygraph-label>.dygraph-title {
+  color: black;
+}

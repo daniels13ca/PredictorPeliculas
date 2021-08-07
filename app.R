@@ -20,12 +20,12 @@ ui <- dashboardPage(
   
   skin = "black",
   
-  dashboardHeader(title = "Ratingpelis 0.2"),
+  dashboardHeader(title = "Ratingpelis 0.2 - DSB"),
   
   dashboardSidebar(sidebarMenu(
     checkboxGroupInput(
       "movie_type",
-      label = NULL,
+      label = "Géneros",
       listado_generos,
       selected = generos_seleccionados
     )
@@ -84,11 +84,18 @@ server <- function(input, output) {
     
     ggplot(movies, aes(movies$Calificacion)) +
       geom_histogram(binwidth = 1,
-                     fill = "blue",
+                     fill = "#E2E4F0",
                      color = "white") +
       labs(title = "Distribución de las calificaciones",
            y = "Cantidad", x = "Calificación") +
-      theme(plot.title = element_text(hjust = 0.5))
+      theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"), 
+            panel.background = element_rect(fill = "white"),
+            panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                            colour = "gray"), 
+            panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                            colour = "gray"),
+            axis.text=element_text(size=14),
+            axis.title = element_text(size = 16, face = "bold"))
     
   })
   
@@ -98,7 +105,7 @@ server <- function(input, output) {
     
     valueBox(round(mean(movies$Calificacion), 2),
              "Calificación media",
-             color = "blue")
+             color = "blue", icon = icon("file-video"))
   })
   
   output$box2 <- renderValueBox({
@@ -107,7 +114,7 @@ server <- function(input, output) {
     
     valueBox(nrow(movies),
              "Películas calificadas",
-             color = "blue")
+             color = "blue", icon = icon("file-video"))
   })
   
   output$box3 <- renderValueBox({
@@ -116,7 +123,7 @@ server <- function(input, output) {
     
     valueBox(round(sd(movies$Calificacion), 2),
              "Desviación estándar",
-             color = "blue")
+             color = "blue", icon = icon("file-video"))
   })
   
   output$trend <- renderDygraph({
@@ -130,13 +137,12 @@ server <- function(input, output) {
     y = cbind(Rating = x)
     
     ## Plot code
-    dygraph(y,
-            main = "Tendencia de la calificación media por año",
+    dygraph(y, main = "Calificación media por año",
             ylab = "Calificación",
             group = "Ratings") %>%
       dyRangeSelector() %>%
-      dyOptions(stepPlot = TRUE) %>%
-      dySeries("V1", label = "Calificación")
+      dyOptions(stepPlot = TRUE, fillGraph = TRUE, fillAlpha = 1) %>%
+      dySeries("V1", label = " ", color = "#E2E4F0")
     
   })
   
@@ -150,3 +156,7 @@ server <- function(input, output) {
 
 
 shinyApp(ui, server)
+
+#Agregar titúlo segundo graficos
+#Alinear al centro titulos de secciones
+#Cambiar icono secciones
