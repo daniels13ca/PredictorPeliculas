@@ -156,7 +156,3 @@ server <- function(input, output) {
 
 
 shinyApp(ui, server)
-
-#Agregar titúlo segundo graficos
-#Alinear al centro titulos de secciones
-#Cambiar icono secciones
