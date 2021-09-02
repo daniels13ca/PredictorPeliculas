@@ -1,0 +1,13 @@
+name: PredictorPeliculas
+title: PredictorPeliculas
+username:
+account: daniels13ca
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4580175
+bundleId: 4993446
+url: https://daniels13ca.shinyapps.io/PredictorPeliculas/
+when: 1630594840.68192
+lastSyncTime: 1630594840.68192
+asMultiple: FALSE
+asStatic: FALSE

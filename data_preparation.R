@@ -1,4 +1,4 @@
-data <- read.csv2(file="Formulario de calificación de películas (respuestas).csv", sep = ";", header = TRUE,
+data <- read.csv2(file="Formulario de calificacion de peliculas (respuestas).csv", sep = ";", header = TRUE,
                   encoding="UTF-8")
 
 col_names <- c("Fecha", "Titulo", "Resumen", "Link en The Movie DB", "Sexo", "Edad al momento de ver la pelicula", "Calificacion", "Genero")
